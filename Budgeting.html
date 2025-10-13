@@ -5,6 +5,178 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Budgeting | Baon Save</title>
     <link rel="stylesheet" href="baon.css">
+    <style>
+        /* Calculator result styles */
+        .calculator-result {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #e8491d;
+            display: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .calculator-result.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .calculator-result h4 {
+            margin-top: 0;
+            color: #35424a;
+            font-size: 18px;
+            border-bottom: 2px solid #e8491d;
+            padding-bottom: 8px;
+        }
+
+        .calculator-result p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .calculator-result .highlight {
+            font-weight: bold;
+            color: #e8491d;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #35424a;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            border-color: #e8491d;
+            outline: none;
+        }
+
+        .budget-breakdown {
+            margin-top: 10px;
+            padding: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 6px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .budget-category {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            padding: 8px 12px;
+            border-bottom: 1px solid #e1e5e9;
+            background-color: white;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .budget-category:hover {
+            background-color: #f0f7ff;
+        }
+
+        .budget-category:last-child {
+            border-bottom: none;
+        }
+
+        .category-name {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+
+        .category-amount {
+            color: #e8491d;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Color coding for different categories */
+        .budget-category.savings {
+            border-left: 3px solid #27ae60;
+        }
+
+        .budget-category.needs {
+            border-left: 3px solid #3498db;
+        }
+
+        .budget-category.wants {
+            border-left: 3px solid #9b59b6;
+        }
+
+        .budget-category.total {
+            border-left: 3px solid #e74c3c;
+            background-color: #fff5f5;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section headers within results */
+        .result-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #e1e5e9;
+        }
+
+        .result-section:first-child {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .result-section p {
+            font-weight: bold;
+            color: #35424a;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        /* Custom calculator specific styles */
+        .custom-percentage-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+
+        .percentage-correct {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .percentage-incorrect {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -15,7 +187,7 @@
             <nav>
                 <ul>
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About</a></li>
+                    <li><a href="about.html">About us</a></li>
                     <li><a href="services.html">Services</a></li>
                     <li class="current"><a href="budgeting.html">Budgeting</a></li>
                 </ul>
@@ -97,17 +269,119 @@
 
                 <div class="dark" style="margin-top: 20px;">
                     <h3>Budget Calculator</h3>
-                    <form class="quote">
-                        <div>
-                            <label>Monthly Allowance</label><br>
-                            <input type="number" placeholder="Amount">
+                    <form class="quote" id="budget-calculator">
+                        <div class="form-group">
+                            <label>Monthly Allowance (₱)</label>
+                            <input type="number" id="monthly-allowance" placeholder="e.g., 5000" min="1" required>
                         </div>
-                        <div>
-                            <label>Savings Goal (%)</label><br>
-                            <input type="number" placeholder="20%" value="20">
+                        <div class="form-group">
+                            <label>Savings Goal (%)</label>
+                            <input type="number" id="savings-percentage" placeholder="20" min="0" max="100" value="20" required>
                         </div>
-                        <button class="button_1" type="submit">Calculate</button>
+                        <button class="button_1" type="submit">Calculate Budget</button>
                     </form>
+                    
+                    <div id="calculator-result" class="calculator-result">
+                        <h4>Your Budget Breakdown</h4>
+                        <div class="budget-breakdown">
+                            <div class="budget-category total">
+                                <span class="category-name">Monthly Allowance:</span>
+                                <span class="category-amount" id="total-allowance">₱0</span>
+                            </div>
+                            <div class="budget-category savings">
+                                <span class="category-name">Savings (20%):</span>
+                                <span class="category-amount" id="savings-amount">₱0</span>
+                            </div>
+                            <div class="budget-category needs">
+                                <span class="category-name">Needs (50%):</span>
+                                <span class="category-amount" id="needs-amount">₱0</span>
+                            </div>
+                            <div class="budget-category wants">
+                                <span class="category-name">Wants (30%):</span>
+                                <span class="category-amount" id="wants-amount">₱0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="result-section">
+                            <p><strong>Daily Budget:</strong></p>
+                            <div class="budget-category needs">
+                                <span class="category-name">Daily Needs:</span>
+                                <span class="category-amount" id="daily-needs">₱0</span>
+                            </div>
+                            <div class="budget-category wants">
+                                <span class="category-name">Daily Wants:</span>
+                                <span class="category-amount" id="daily-wants">₱0</span>
+                            </div>
+                            <div class="budget-category savings">
+                                <span class="category-name">Daily Savings:</span>
+                                <span class="category-amount" id="daily-savings">₱0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="result-section">
+                            <p><strong>Weekly Budget:</strong></p>
+                            <div class="budget-category needs">
+                                <span class="category-name">Weekly Needs:</span>
+                                <span class="category-amount" id="weekly-needs">₱0</span>
+                            </div>
+                            <div class="budget-category wants">
+                                <span class="category-name">Weekly Wants:</span>
+                                <span class="category-amount" id="weekly-wants">₱0</span>
+                            </div>
+                            <div class="budget-category savings">
+                                <span class="category-name">Weekly Savings:</span>
+                                <span class="category-amount" id="weekly-savings">₱0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dark" style="margin-top: 20px;">
+                    <h3>Custom Budget Calculator</h3>
+                    <div id="percentage-warning" class="custom-percentage-warning">
+                        Total percentage must equal 100%
+                    </div>
+                    <form class="quote" id="custom-budget-calculator">
+                        <div class="form-group">
+                            <label>Monthly Allowance (₱)</label>
+                            <input type="number" id="custom-allowance" placeholder="e.g., 5000" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Needs Percentage (%)</label>
+                            <input type="number" id="needs-percentage" placeholder="50" min="0" max="100" value="50" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Wants Percentage (%)</label>
+                            <input type="number" id="wants-percentage" placeholder="30" min="0" max="100" value="30" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Savings Percentage (%)</label>
+                            <input type="number" id="custom-savings-percentage" placeholder="20" min="0" max="100" value="20" required>
+                        </div>
+                        <button class="button_1" type="submit">Calculate Custom Budget</button>
+                    </form>
+                    
+                    <div id="custom-calculator-result" class="calculator-result">
+                        <h4>Your Custom Budget</h4>
+                        <div class="budget-breakdown">
+                            <div class="budget-category total">
+                                <span class="category-name">Total Allowance:</span>
+                                <span class="category-amount" id="custom-total">₱0</span>
+                            </div>
+                            <div class="budget-category savings">
+                                <span class="category-name">Savings:</span>
+                                <span class="category-amount" id="custom-savings">₱0</span>
+                            </div>
+                            <div class="budget-category needs">
+                                <span class="category-name">Needs:</span>
+                                <span class="category-amount" id="custom-needs">₱0</span>
+                            </div>
+                            <div class="budget-category wants">
+                                <span class="category-name">Wants:</span>
+                                <span class="category-amount" id="custom-wants">₱0</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </aside>
         </div>
@@ -116,5 +390,123 @@
     <footer>
         <p>Baon Save, Awwright &copy; 2025</p>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 50/30/20 Budget Calculator
+            const budgetCalculator = document.getElementById('budget-calculator');
+            const resultDiv = document.getElementById('calculator-result');
+
+            budgetCalculator.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const monthlyAllowance = parseFloat(document.getElementById('monthly-allowance').value);
+                const savingsPercentage = parseFloat(document.getElementById('savings-percentage').value);
+                
+                if (!monthlyAllowance || !savingsPercentage) {
+                    alert('Please fill in all fields with valid numbers.');
+                    return;
+                }
+
+                // Calculate 50/30/20 budget
+                const savingsAmount = (monthlyAllowance * savingsPercentage) / 100;
+                const remainingAmount = monthlyAllowance - savingsAmount;
+                const needsAmount = (remainingAmount * 50) / 100;
+                const wantsAmount = (remainingAmount * 30) / 100;
+
+                // Daily calculations (assuming 30 days per month)
+                const dailyNeeds = needsAmount / 30;
+                const dailyWants = wantsAmount / 30;
+                const dailySavings = savingsAmount / 30;
+
+                // Weekly calculations
+                const weeklyNeeds = needsAmount / 4;
+                const weeklyWants = wantsAmount / 4;
+                const weeklySavings = savingsAmount / 4;
+
+                // Update display
+                document.getElementById('total-allowance').textContent = `₱${monthlyAllowance.toFixed(2)}`;
+                document.getElementById('savings-amount').textContent = `₱${savingsAmount.toFixed(2)}`;
+                document.getElementById('needs-amount').textContent = `₱${needsAmount.toFixed(2)}`;
+                document.getElementById('wants-amount').textContent = `₱${wantsAmount.toFixed(2)}`;
+                
+                document.getElementById('daily-needs').textContent = `₱${dailyNeeds.toFixed(2)}`;
+                document.getElementById('daily-wants').textContent = `₱${dailyWants.toFixed(2)}`;
+                document.getElementById('daily-savings').textContent = `₱${dailySavings.toFixed(2)}`;
+                
+                document.getElementById('weekly-needs').textContent = `₱${weeklyNeeds.toFixed(2)}`;
+                document.getElementById('weekly-wants').textContent = `₱${weeklyWants.toFixed(2)}`;
+                document.getElementById('weekly-savings').textContent = `₱${weeklySavings.toFixed(2)}`;
+
+                resultDiv.classList.add('show');
+            });
+
+            // Custom Budget Calculator
+            const customBudgetCalculator = document.getElementById('custom-budget-calculator');
+            const customResultDiv = document.getElementById('custom-calculator-result');
+            const percentageWarning = document.getElementById('percentage-warning');
+
+            // Real-time percentage validation
+            const percentageInputs = ['needs-percentage', 'wants-percentage', 'custom-savings-percentage'];
+            
+            percentageInputs.forEach(inputId => {
+                document.getElementById(inputId).addEventListener('input', validatePercentages);
+            });
+
+            function validatePercentages() {
+                const needsPercentage = parseFloat(document.getElementById('needs-percentage').value) || 0;
+                const wantsPercentage = parseFloat(document.getElementById('wants-percentage').value) || 0;
+                const customSavingsPercentage = parseFloat(document.getElementById('custom-savings-percentage').value) || 0;
+                
+                const totalPercentage = needsPercentage + wantsPercentage + customSavingsPercentage;
+                
+                if (totalPercentage === 100) {
+                    percentageWarning.textContent = 'Perfect! Total is 100%';
+                    percentageWarning.className = 'custom-percentage-warning percentage-correct';
+                } else {
+                    percentageWarning.textContent = `Total percentage must equal 100%. Currently: ${totalPercentage}%`;
+                    percentageWarning.className = 'custom-percentage-warning percentage-incorrect';
+                }
+            }
+
+            customBudgetCalculator.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const customAllowance = parseFloat(document.getElementById('custom-allowance').value);
+                const needsPercentage = parseFloat(document.getElementById('needs-percentage').value);
+                const wantsPercentage = parseFloat(document.getElementById('wants-percentage').value);
+                const customSavingsPercentage = parseFloat(document.getElementById('custom-savings-percentage').value);
+                
+                // Validate total percentage equals 100%
+                const totalPercentage = needsPercentage + wantsPercentage + customSavingsPercentage;
+                
+                if (totalPercentage !== 100) {
+                    alert(`Total percentage must equal 100%. Currently it's ${totalPercentage}%. Please adjust your percentages.`);
+                    return;
+                }
+
+                if (!customAllowance || !needsPercentage || !wantsPercentage || !customSavingsPercentage) {
+                    alert('Please fill in all fields with valid numbers.');
+                    return;
+                }
+
+                // Calculate custom budget
+                const customSavings = (customAllowance * customSavingsPercentage) / 100;
+                const customNeeds = (customAllowance * needsPercentage) / 100;
+                const customWants = (customAllowance * wantsPercentage) / 100;
+
+                // Update display
+                document.getElementById('custom-total').textContent = `₱${customAllowance.toFixed(2)}`;
+                document.getElementById('custom-savings').textContent = `₱${customSavings.toFixed(2)}`;
+                document.getElementById('custom-needs').textContent = `₱${customNeeds.toFixed(2)}`;
+                document.getElementById('custom-wants').textContent = `₱${customWants.toFixed(2)}`;
+
+                customResultDiv.classList.add('show');
+            });
+
+            // Initial validation
+            validatePercentages();
+        });
+    </script>
 </body>
 </html>
