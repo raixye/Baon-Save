@@ -5,6 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saving Tips | Baon Save</title>
     <link rel="stylesheet" href="baon.css">
+    <style>
+        /* Styles for the text transition */
+        .saving-tip {
+            display: none; /* Hide all tips by default */
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .saving-tip.active {
+            display: block; /* Show the active tip */
+            opacity: 1;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Style for the button */
+        #next-tip-btn {
+            display: block;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+
+        /* Calculator result styles */
+        .calculator-result {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+            border-left: 4px solid #35424a;
+            display: none;
+        }
+
+        .calculator-result.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .calculator-result h4 {
+            margin-top: 0;
+            color: #35424a;
+        }
+
+        .calculator-result p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .calculator-result .highlight {
+            font-weight: bold;
+            color: #e8491d;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -15,7 +96,7 @@
             <nav>
                 <ul>
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About</a></li>
+                    <li><a href="about.html">About us</a></li>
                     <li><a href="services.html">Services</a></li>
                     <li class="current"><a href="saving-tips.html">Saving Tips</a></li>
                 </ul>
@@ -41,30 +122,34 @@
                 
                 <h2>Smart Saving Strategies</h2>
                 
-                <div class="saving-tip">
-                    <h3>1. Pay Yourself First</h3>
-                    <p>Set aside savings immediately when you receive your allowance. This ensures you save before you spend on non-essentials.</p>
+                <div id="tips-container">
+                    <div class="saving-tip active">
+                        <h3>1. Pay Yourself First</h3>
+                        <p>Set aside savings immediately when you receive your allowance. This ensures you save before you spend on non-essentials.</p>
+                    </div>
+
+                    <div class="saving-tip">
+                        <h3>2. The 24-Hour Rule</h3>
+                        <p>Wait 24 hours before making non-essential purchases. This helps avoid impulse buying and ensures you really want the item.</p>
+                    </div>
+
+                    <div class="saving-tip">
+                        <h3>3. Use Cash Envelopes</h3>
+                        <p>Allocate cash for different spending categories. When the cash is gone, you stop spending in that category for the period.</p>
+                    </div>
+
+                    <div class="saving-tip">
+                        <h3>4. Track Your Progress</h3>
+                        <p>Regularly monitor your savings growth. Seeing progress motivates you to continue saving.</p>
+                    </div>
+
+                    <div class="saving-tip">
+                        <h3>5. Automate Your Savings</h3>
+                        <p>Set up automatic transfers to your savings account. Out of sight, out of mind - and into savings!</p>
+                    </div>
                 </div>
 
-                <div class="saving-tip">
-                    <h3>2. The 24-Hour Rule</h3>
-                    <p>Wait 24 hours before making non-essential purchases. This helps avoid impulse buying and ensures you really want the item.</p>
-                </div>
-
-                <div class="saving-tip">
-                    <h3>3. Use Cash Envelopes</h3>
-                    <p>Allocate cash for different spending categories. When the cash is gone, you stop spending in that category for the period.</p>
-                </div>
-
-                <div class="saving-tip">
-                    <h3>4. Track Your Progress</h3>
-                    <p>Regularly monitor your savings growth. Seeing progress motivates you to continue saving.</p>
-                </div>
-
-                <div class="saving-tip">
-                    <h3>5. Automate Your Savings</h3>
-                    <p>Set up automatic transfers to your savings account. Out of sight, out of mind - and into savings!</p>
-                </div>
+                <button id="next-tip-btn" class="button_1">Next Tip</button>
 
                 <h2>Student-Specific Saving Ideas</h2>
                 <ul>
@@ -98,21 +183,29 @@
 
                 <div class="dark" style="margin-top: 20px;">
                     <h3>Savings Goal Calculator</h3>
-                    <form class="quote">
-                        <div>
-                            <label>Goal Amount</label><br>
-                            <input type="number" placeholder="₱">
+                    <form class="quote" id="savings-calculator">
+                        <div class="form-group">
+                            <label>Goal Amount (₱)</label>
+                            <input type="number" id="goal-amount" placeholder="e.g., 5000" min="1" required>
                         </div>
-                        <div>
-                            <label>Timeframe (months)</label><br>
-                            <input type="number" placeholder="6">
+                        <div class="form-group">
+                            <label>Timeframe (months)</label>
+                            <input type="number" id="timeframe" placeholder="e.g., 6" min="1" required>
                         </div>
-                        <div>
-                            <label>Weekly Savings</label><br>
-                            <input type="number" placeholder="₱">
+                        <div class="form-group">
+                            <label>Weekly Savings (₱)</label>
+                            <input type="number" id="weekly-savings" placeholder="e.g., 200" min="1" required>
                         </div>
                         <button class="button_1" type="submit">Calculate</button>
                     </form>
+                    
+                    <div id="calculator-result" class="calculator-result">
+                        <h4>Your Savings Plan</h4>
+                        <p>Monthly savings needed: <span class="highlight" id="monthly-needed">₱0</span></p>
+                        <p>Total time to reach goal: <span class="highlight" id="total-time">0 months</span></p>
+                        <p>Weekly savings needed: <span class="highlight" id="weekly-needed">₱0</span></p>
+                        <p>Daily savings needed: <span class="highlight" id="daily-needed">₱0</span></p>
+                    </div>
                 </div>
             </aside>
         </div>
@@ -121,5 +214,74 @@
     <footer>
         <p>Baon Save, Awwright &copy; 2025</p>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tips = document.querySelectorAll('.saving-tip');
+            const nextTipBtn = document.getElementById('next-tip-btn');
+            let currentTipIndex = 0;
+
+            // Saving tips navigation
+            if (tips.length > 0 && nextTipBtn) {
+                nextTipBtn.addEventListener('click', function() {
+                    tips[currentTipIndex].classList.remove('active');
+                    currentTipIndex = (currentTipIndex + 1) % tips.length;
+                    tips[currentTipIndex].classList.add('active');
+                });
+            }
+
+            // Savings calculator functionality
+            const calculatorForm = document.getElementById('savings-calculator');
+            const resultDiv = document.getElementById('calculator-result');
+
+            calculatorForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get input values
+                const goalAmount = parseFloat(document.getElementById('goal-amount').value);
+                const timeframe = parseFloat(document.getElementById('timeframe').value);
+                const weeklySavings = parseFloat(document.getElementById('weekly-savings').value);
+                
+                // Validate inputs
+                if (!goalAmount || !timeframe || !weeklySavings) {
+                    alert('Please fill in all fields with valid numbers.');
+                    return;
+                }
+
+                // Calculate results
+                const monthlySavingsNeeded = goalAmount / timeframe;
+                const totalWeeksNeeded = goalAmount / weeklySavings;
+                const totalMonthsNeeded = totalWeeksNeeded / 4.33; // Average weeks per month
+                const dailySavingsNeeded = weeklySavings / 7;
+
+                // Display results
+                document.getElementById('monthly-needed').textContent = `₱${monthlySavingsNeeded.toFixed(2)}`;
+                document.getElementById('total-time').textContent = `${totalMonthsNeeded.toFixed(1)} months`;
+                document.getElementById('weekly-needed').textContent = `₱${weeklySavings.toFixed(2)}`;
+                document.getElementById('daily-needed').textContent = `₱${dailySavingsNeeded.toFixed(2)}`;
+
+                // Show result div
+                resultDiv.classList.add('show');
+
+                // Add comparison message
+                let comparisonMessage = '';
+                if (totalMonthsNeeded <= timeframe) {
+                    comparisonMessage = `Great! With your current savings rate, you'll reach your goal in ${totalMonthsNeeded.toFixed(1)} months.`;
+                } else {
+                    const additionalWeekly = (goalAmount / timeframe / 4.33) - weeklySavings;
+                    comparisonMessage = `To reach your goal in ${timeframe} months, you need to save ₱${additionalWeekly.toFixed(2)} more per week.`;
+                }
+                
+                // Update or create comparison message
+                let existingMessage = document.getElementById('comparison-message');
+                if (!existingMessage) {
+                    existingMessage = document.createElement('p');
+                    existingMessage.id = 'comparison-message';
+                    resultDiv.appendChild(existingMessage);
+                }
+                existingMessage.innerHTML = `<span class="highlight">${comparisonMessage}</span>`;
+            });
+        });
+    </script>
 </body>
 </html>
