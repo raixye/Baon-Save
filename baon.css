@@ -31,13 +31,13 @@ ul{
   border:0;
   padding-left: 20px;
   padding-right:20px; 
-  color:#ffffff;
+  color:#0e0101;
 }
 
 .dark{
   padding:15px;
   background:#d3e482;
-  color:#ffffff;
+  color:#140e0e;
   margin-top:10px;
   margin-bottom:10px;
 }
@@ -45,14 +45,14 @@ ul{
 /* Header **/
 header{
   background: #556B2F
-  color#ffffff;
+  color#0f0d0d;
   padding-top:30px;
   min-height:70px;
   border-bottom:#307508;
 }
 
 header a{
-  color:#ffffff;
+  color:#0e0d0d;
   text-decoration:none;
   text-transform: uppercase;
   font-size:16px;
@@ -78,12 +78,12 @@ header nav{
 }
 
 header .highlight, header .current a{
-  color:#ebebeb;
+  color:#131212;
   font-weight:bold;
 }
 
 header a:hover{
-  color:#cccccc;
+  color:#0f0f0f;
   font-weight:bold;
 }
 
@@ -130,7 +130,7 @@ header a:hover{
 /* Newsletter */
 #newsletter{
   padding:15px;
-  color:#ffffff;
+  color:#0c0b0b;
   background:#7fc46e;
   position: relative;
   z-index: 1;
@@ -189,15 +189,15 @@ article#main-col{
 ul#services li{
   list-style: none;
   padding:20px;
-  border: #cccccc solid 1px;
+  border: #070606 solid 1px;
   margin-bottom:5px;
-  background:#e6e6e6;
+  background:#ebe6e6;
 }
 
 footer{
   padding:20px;
   margin-top:20px;
-  color:#ffffff;
+  color:#f8f2f2;
   background-color: #8FA31E;
   text-align: center;
 }
