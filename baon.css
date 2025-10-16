@@ -1,5 +1,6 @@
 body{
   font: 15px/1.5 Times new roman, Helvetica,sans-serif;
+  color:#f3d0d0;
   padding:0;
   margin:0;
   background-color:#556B2F;
@@ -31,13 +32,13 @@ ul{
   border:0;
   padding-left: 20px;
   padding-right:20px; 
-  color:#0e0101;
+  color:#e7dcdc;
 }
 
 .dark{
   padding:15px;
   background:#d3e482;
-  color:#140e0e;
+  color:#0c0b0b;
   margin-top:10px;
   margin-bottom:10px;
 }
@@ -94,7 +95,7 @@ header a:hover{
   background-position: center;
   background-size: cover;
   text-align:center;
-  color:#ffffff;
+  color:#080808;
   position: relative;
 }
 
@@ -130,7 +131,7 @@ header a:hover{
 /* Newsletter */
 #newsletter{
   padding:15px;
-  color:#0c0b0b;
+  color:#ebe4e4;
   background:#7fc46e;
   position: relative;
   z-index: 1;
