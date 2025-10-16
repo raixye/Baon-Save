@@ -131,7 +131,7 @@ header a:hover{
 /* Newsletter */
 #newsletter{
   padding:15px;
-  color:#ebe4e4;
+  color:#070707;
   background:#7fc46e;
   position: relative;
   z-index: 1;
@@ -192,13 +192,13 @@ ul#services li{
   padding:20px;
   border: #070606 solid 1px;
   margin-bottom:5px;
-  background:#ebe6e6;
+  background:#013105;
 }
 
 footer{
   padding:20px;
   margin-top:20px;
-  color:#f8f2f2;
+  color:#070606;
   background-color: #8FA31E;
   text-align: center;
 }
